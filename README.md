@@ -34,23 +34,28 @@ Rédaction du script SQL de création des tables en respectant les contraintes s
 - Définition des contraintes de valeur (`NOT NULL`)
 - Ajout des clés candidates (`UNIQUE`)
 - Inclusion des instructions `DROP TABLE` en début de script pour permettre les relances
+
 ### Étape 3 — Identification et implémentation des contraintes
 Analyse des règles d'affaires du système et choix de l'approche d'implémentation appropriée pour chacune :
-- **CHECK** : contraintes statiques simples sur les valeurs d'une colonne
-- **FOREIGN KEY** : contraintes de domaine via référence à une autre table
-- **TRIGGER** : contraintes dynamiques complexes nécessitant une logique conditionnelle
+- **CHECK** : contraintes statiques simples sur les numéros de local (NRO_LOCAL), le nombre de chiffre d'un post d'un enseignant (POSTE -> NOM), le statut d'un enseignant (STATUT), le statut d'un étudiant (STATUT), le sigle d'un cours (COURS), le nombre d'étudiants dans un cours enseigné (NBR_ETUDIANTS), la session d'un cours enseigné (SESSION_COURS), le groupe associé au cours enseigné (GROUPE), le jour de la planification (JOUR), le début de l'heure de la planification (HEURE_DEBUT), la fin de l'heure de la planification (HEURE_FIN), l'activité de la planification (ACTIVITE), le statut d'un étudiant inscrit (STATUT).
+  
+- **FOREIGN KEY** : contraintes de domaine sur le numéro de l'assurance sociale d'une personne (NAS), le numéro d'un local (NRO_LOCAL), le numéro de département (NRO_DEPARTEMENT), le directeur d'un département (DIRECTEUR), la matricule du directeur (MATRICULE_DIRECTEUR), le sigle d'un cours préalable (SIGLE_PREALABLE). 
+- **TRIGGER** : gestion des mises à jour du NAS, d'un numéro de local, du matricule d'un enseignant, du code permanent d'un étudiant.
+
 ### Étape 4 — Création des procédures stockées
-Encapsulation des opérations de mise à jour de la base de données dans des procédures PL/SQL. Utilisation des `SEQUENCE` Oracle pour la génération automatique des clés artificielles, sans les passer en paramètre.
+Encapsulation des opérations (ajout d'un local, ajout d'une personne, ajout d'un enseignant, ajout d'un étudiant, ajout d'un département, ajout d'un cours, ajout d'une planification, ajout d'une inscription) de mise à jour de la base de données dans des procédures PL/SQL.
  
 ### Étape 5 — Insertion des données (`data.sql`)
-Peuplement de la base de données via les procédures stockées :
+Insertion de la base de données via les procédures stockées :
 - 2 départements
 - 5 cours par département (10 au total)
 - 4 enseignants, associés à un département et un cours
+
 ### Étape 6 — Gestion des droits d'accès
 Création de deux utilisateurs Oracle distincts et attribution des privilèges :
 - **Utilisateur administrateur (DBA)** : tous les droits sur le schéma (création, insertion, modification, suppression)
 - **Utilisateur standard** : accès en lecture seule (`SELECT`) sur les tables; toute tentative d'insertion ou de modification est refusée
+
 ### Étape 7 — Tests et validation
 Vérification du comportement des contraintes avec des cas valides et invalides. Validation des droits d'accès par captures d'écran pour les deux profils utilisateurs.
  
